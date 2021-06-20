@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script src="https://hcaptcha.com/1/api.js" async defer></script>
+    <link rel="stylesheet" href="../static/modal.css">
+</head>
+<body>
+<div class="modal">
+    <form action="/login" method="post">
+        <div class="modal-header">
+            Войти|<a href="registration">Регистрация</a>
+        </div>
+        <div class="modal-body">
+            <div class="server_log">{{ error }}</div>
+            <center class="body">
+                <label class="input">
+                    Email:
+                    <br>
+                    <input type="text" name="email" value="{{ email }}">
+                </label>
+                <br>
+                <label class="input">
+                    Пароль: <a href="reset">Забыли пароль?</a>
+                    <br>
+                    <input type="password" name="password">
+                </label>
+                <br>
+                <div class="h-captcha" data-sitekey="{{ Key }}"></div>
+            </center>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="footer-button">Вход</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

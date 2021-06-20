@@ -1,0 +1,48 @@
+{
+  "version": "0.1",
+  "title": null,
+  "db_path": "./identifier.sqlite",
+  "site": {
+    "login_page": "login.html",
+    "registration": "reg.html",
+    "home_page": "home.html",
+    "code": "code.html",
+    "reset_page": "reset.html",
+    "change": "change.html",
+    "email_sent": "email_was_sent.html"
+  },
+  "default": {
+    "login_page": {
+      "error": "",
+      "email": "",
+      "Key": "65399c5e-49f8-404d-b4af-a1fc2bf21426"
+    },
+    "registration": {
+      "Key": "65399c5e-49f8-404d-b4af-a1fc2bf21426"
+    },
+    "reset": {
+      "Key": "65399c5e-49f8-404d-b4af-a1fc2bf21426"
+    }
+  },
+  "domains": [
+    "yandex.ru",
+    "gmail.com",
+    "mail.ru"
+  ],
+  "sender": {
+    "gmail": "popqeq3@gmail.com",
+    "password": "voven4ek"
+  },
+  "email_error": "Доступны только (@gmail.com, @mail.ru, @yandex.ru), буквы (a-z), цифры (0-9) и точка!",
+  "password_error": "Длинна пароля должна быть от 8 до 40",
+  "user_not_found_error": "Неверный логин или пароль!",
+  "password_do_not_match": "Пароли не совпадают!",
+  "username_already_taken": "Имя пользователя уже занято!",
+  "invalid_length_of_username": "Длинна имени пользователя от 4 до 30 символов!",
+  "captcha_error": "Ошибка капча не решена или решена неверно!",
+  "secret_key_h": "0x57Fdf563Bc1daEa6bb57ce11CDc5DFEB6F3745A3",
+  "h_key": "65399c5e-49f8-404d-b4af-a1fc2bf21426",
+  "password_changed": "Пароль был изменён!",
+  "subject": "Код подтверждения.",
+  "from": "Voven4ek"
+}

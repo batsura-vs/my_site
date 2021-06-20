@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <script src="https://hcaptcha.com/1/api.js" async defer></script>
+    <link rel="stylesheet" href="../static/modal.css">
+</head>
+<body>
+<div class="modal">
+    <form action="/reg" method="post">
+        <div class="modal-header">
+            Регистрация|<a href="log">Войти</a>
+        </div>
+        <div class="modal-body">
+            <div class="server_log">{{ error }}</div>
+            <center class="body">
+                <label class="input">
+                    Email:
+                    <br>
+                    <input type="text" name="email" value="{{ email }}">
+                </label>
+                <br>
+                <label class="input">
+                    Username (виден всем):
+                    <br>
+                    <div id="taken" class="server_log"></div>
+                    <input type="text" name="username" id="username">
+                </label>
+                <br>
+                <label class="input">
+                    Пароль:
+                    <br>
+                    <input type="password" name="password">
+                </label>
+                <br>
+                <label class="input">
+                    Повторение пароля:
+                    <br>
+                    <input type="password" name="password2">
+                </label>
+                <div class="h-captcha" data-sitekey="{{ Key }}"></div>
+            </center>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="footer-button">Зарегистрироваться</button>
+        </div>
+    </form>
+</div>
+<script>
+    var username = document.getElementById('username')
+    username.addEventListener('change', function () {
+        if (username.value !== '') {
+            fetch('/username/' + username.value).then(response => response.json()).then(data => {
+                document.getElementById('taken').innerHTML = data['res']
+            })
+        }
+    })
+</script>
+</body>
+</html>

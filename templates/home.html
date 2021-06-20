@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="/static/all.css">
+    <script src="/static/all.js"></script>
+</head>
+<body>
+<div class="bar">
+    <div class="pun">Профиль
+        <div class="arrow-down"></div>
+        <div class="menu">
+            <div class="op">
+                Карта профиля
+                <div class="arrow-right"></div>
+                <div class="suboption right-suboption" style="background: #323232;">
+                    <div class="card">
+                        <div class="card-img"><img src="/static/user.svg" alt="user_photo"></div>
+                        <div class="card-title">{{ username }}</div>
+                        <br>
+                        <div class="card-body">
+                            Имя пользователя: {{ username }}
+                            <br>
+                            Роль: {{ role }}
+                            <br>
+                            email: {{ email }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="op">
+                <a href="/reset">Сбросить пароль</a>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .bar {
+        background: #1c434f;
+    }
+
+    .pun {
+        padding: 0 10% 0 10%;
+    }
+
+    .menu {
+        background: linear-gradient(to top, #34b037, #1c434f);
+    }
+
+    .card {
+    }
+
+    .card-img {
+        width: 100%;
+        float: right;
+    }
+
+    .card-img > img {
+        width: 30%;
+        height: 30%;
+    }
+
+    .card-title {
+        display: inline-block;
+        font-size: 200%;
+        margin: 1rem;
+        color: white;
+    }
+
+    .card-body {
+        width: 100%;
+        text-align: start;
+        margin: 1rem;
+        color: white;
+    }
+</style>
+</body>
+</html>

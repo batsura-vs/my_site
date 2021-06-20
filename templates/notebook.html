@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NoteBook</title>
+</head>
+<body>
+<div class="notebook">
+    <textarea class="notebook-textarea"></textarea>
+    <div class="line" deletable="false">
+        <div class="line-number">1</div>
+        <div class="notebook-line" contenteditable="true" data-pos="0">
+        </div>
+    </div>
+</div>
+<style>
+    .notebook-textarea {
+        display: none;
+    }
+
+    .notebook-line {
+        width: calc(100% - 3.5rem);
+        display: inline-block;
+        word-break: break-all;
+        outline: none;
+        padding-left: 3.5rem;
+    }
+
+    .line {
+        width: 100%;
+        color: white;
+        position: relative;
+    }
+
+    .line-number {
+        display: inline-block;
+        border-right: solid #33ea34;
+        position: absolute;
+        left: 0;
+        z-index: 2;
+        width: 3rem;
+    }
+
+    body {
+        margin: 0;
+    }
+
+    .notebook {
+        position: absolute;
+        background: #2a2a2a;
+        height: 100%;
+        width: 100%;
+    }
+</style>
+<script>
+    var syntax = {
+        "print": "#227fce",
+        "hello": "#cd4444",
+        '\'': ['green']
+    }
+
+    async function insertTextAtCaret(text) {
+        var sel, range;
+        if (window.getSelection) {
+            sel = window.getSelection();
+            if (sel.getRangeAt && sel.rangeCount) {
+                range = sel.getRangeAt(0);
+                range.deleteContents();
+                range.insertNode(document.createTextNode(text));
+            }
+        } else if (document.selection && document.selection.createRange) {
+            document.selection.createRange().text = text;
+        }
+    }
+
+    function stripHtml(html) {
+        let tmp = document.createElement("DIV");
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText || "";
+    }
+
+    function placeCaretAtEnd(el, offset) {
+        var range = document.createRange(),
+            sel = window.getSelection();
+
+        range.setStart(el.firstChild, offset);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+    }
+
+    function setCaret(el, num) {
+        var range = document.createRange()
+        var sel = window.getSelection()
+        range.setStart(el, num)
+        range.setEnd(el, num);
+        range.collapse(true)
+
+        sel.removeAllRanges()
+        sel.addRange(range)
+    }
+
+    function use_syntax(syntax, nl) {
+        let k = Object.keys(syntax)
+        nl.style.color = 'white'
+        nl.innerHTML = stripHtml(nl.innerHTML)
+        for (var i = 0; i < k.length; i++) {
+            let key = k[i]
+            if (nl.innerHTML.includes(key)) {
+                if (typeof syntax[key] === 'string') {
+                    nl.innerHTML = nl.innerHTML.replaceAll(key, `<span style="color: ${syntax[key]}">${key}</span>`)
+                } else {
+                    let text = nl.innerHTML.split(key)
+                    let t = text[0]
+                    let z = 0
+                    for (var x = 1; x < text.length; x++) {
+                        if (z === 0) {
+                            t += `<span style="color: ${syntax[key][0]}">${key}` + text[x]
+                            z = 1
+                        } else if (z === 1) {
+                            t += `${key}</span>` + text[x]
+                            z = 0
+                        }
+                    }
+                    nl.innerHTML = t
+                }
+            }
+        }
+        nl.style.background = 'none'
+    }
+
+    function getCaretPosition(editableDiv) {
+        var caretPos = 0,
+            sel, range;
+        if (window.getSelection) {
+            sel = window.getSelection();
+            if (sel.rangeCount) {
+                range = sel.getRangeAt(0);
+                if (range.commonAncestorContainer.parentNode == editableDiv) {
+                    caretPos = range.endOffset;
+                }
+            }
+        } else if (document.selection && document.selection.createRange) {
+            range = document.selection.createRange();
+            if (range.parentElement() == editableDiv) {
+                var tempEl = document.createElement("span");
+                editableDiv.insertBefore(tempEl, editableDiv.firstChild);
+                var tempRange = range.duplicate();
+                tempRange.moveToElementText(tempEl);
+                tempRange.setEndPoint("EndToEnd", range);
+                caretPos = tempRange.text.length;
+            }
+        }
+        return caretPos;
+    }
+
+    async function check_new_line(notLine, line, notebook) {
+        var content = notLine.innerHTML;
+        if (content.includes('<br>')) {
+            let text = content.split('<br>')
+            let text2 = content.substr(text[0].length).replaceAll('<br>', '')
+            notLine.innerHTML = content.substr(0, content.length - text[1].length).replaceAll('<br>', '')
+            add_new_line(line, notebook, text2)
+        }
+    }
+
+
+    function line_numbers(notebook) {
+        for (var i = 0; i < notebook.length; i++) {
+            let line = notebook[i]
+            let number = line.getElementsByClassName('line-number')[0]
+            let notLine = line.getElementsByClassName('notebook-line')[0]
+            number.innerHTML = i + 1
+            use_syntax(syntax, notLine)
+        }
+    }
+
+    function add_new_line(last, notebook, text) {
+        let l = document.createElement('div')
+        l.className = 'line'
+        l.setAttribute('deletable', 'true')
+        let ln = document.createElement('div')
+        ln.className = 'line-number'
+        let nl = document.createElement('div')
+        nl.contentEditable = 'true'
+        nl.className = 'notebook-line'
+        nl.setAttribute('data-pos', '0')
+        nl.innerHTML = text
+        l.appendChild(ln)
+        l.appendChild(nl)
+        last.parentNode.insertBefore(l, last.nextSibling);
+        nl.addEventListener('input', check_new_line.bind(null, nl, l, notebook))
+        nl.addEventListener('focus', function () {
+            line_numbers(notebook)
+            nl.innerHTML = nl.textContent
+            nl.style.background = 'rgba(144, 144, 144, 0.44)'
+        })
+        line_numbers(notebook)
+        setCaret(nl, 0)
+        nl.onkeydown = function () {
+            var key = event.keyCode || event.charCode;
+            if (key === 8)
+                if (getCaretPosition(nl) === 0 && l.getAttribute('deletable') === 'true') {
+                    let elem = l.previousElementSibling.getElementsByClassName('notebook-line')[0]
+                    setCaret(elem, 0)
+                    let len = stripHtml(elem.innerHTML).length
+                    let tex = elem.textContent
+                    let tex2 = nl.textContent
+                    elem.innerHTML = ''
+                    l.remove()
+                    line_numbers(notebook)
+                    elem.innerHTML = tex + '1' + tex2
+                    elem.style.background = 'rgba(144, 144, 144, 0.44)'
+                    placeCaretAtEnd(elem, len + 1)
+                }
+        }
+    }
+
+    var lines = document.getElementsByClassName('line')
+    var notebook = document.getElementsByClassName('notebook')[0]
+    for (var i = 0; i < lines.length; i++) {
+        let line = lines[i]
+        let notLine = line.getElementsByClassName('notebook-line')[0]
+        notLine.addEventListener('input', check_new_line.bind(null, notLine, line, lines))
+        notLine.addEventListener('focus', function () {
+            line_numbers(lines)
+            notLine.innerHTML = notLine.textContent
+            notLine.style.background = 'rgba(144, 144, 144, 0.44)'
+        })
+        notLine.onkeydown = function () {
+            var key = event.keyCode || event.charCode;
+            if (key === 8)
+                if (getCaretPosition(notLine) === 0 && line.getAttribute('deletable') === 'true') {
+                    let elem = line.previousElementSibling.getElementsByClassName('notebook-line')[0]
+                    setCaret(elem, 0)
+                    let len = elem.innerHTML.length
+                    elem.innerHTML = elem.innerHTML + '1' + notLine.innerHTML
+                    elem.style.background = 'rgba(144, 144, 144, 0.44)'
+                    placeCaretAtEnd(elem, len + 1)
+                    line.remove()
+                    line_numbers(lines)
+                }
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sent!</title>
+</head>
+<body>
+<div class="modal">
+    <form action="/{{ submit }}" method="post">
+        <div style="margin-bottom: 1rem">Код подтверждения был отправлен на аддрес
+            <code class="code">{{ email }}</code>
+        </div>
+        <div class="modal-body">
+            <div class="server_log">{{ error }}</div>
+            <center class="body">
+                <label class="input">
+                    Введитие код подтвеждения:
+                    <br>
+                    <input type="text" name="code">
+                </label>
+            </center>
+            <div class="modal-footer">
+                <button type="submit" class="footer-button">Поддтвердить</button>
+            </div>
+        </div>
+    </form>
+</div>
+<style>
+    .modal {
+        width: min-content;
+        height: fit-content;
+        position: absolute;
+        top: 10%;
+        left: 0;
+        right: 0;
+        margin: auto;
+        border: #323232 solid 1pt;
+        border-radius: 1rem;
+        padding: 1rem;
+    }
+
+    .modal-body {
+        width: min-content;
+        padding: 0.5rem;
+        background: rgba(54, 54, 54, 0.33);
+        position: relative;
+    }
+
+    .body > * {
+        margin: 0.5rem;
+    }
+
+    .server_log {
+        background: #d73c4e;
+        border-radius: 0.4rem;
+        text-align: center;
+        color: white;
+        word-break: break-word;
+        width: fit-content;
+        right: 0;
+        left: 0;
+        margin: auto;
+    }
+
+    .body {
+        margin: 1rem;
+    }
+
+    .modal-footer {
+        padding-top: 0.5rem;
+        border-top: #323232 solid 1pt;
+        width: 100%;
+    }
+
+    .footer-button {
+        background: #7cd772;
+        border: none;
+        padding: 0.5rem;
+        border-radius: 1rem;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .footer-button:hover {
+        background: rgba(3, 253, 19, 0.81);
+    }
+
+    .code {
+        background: #323232;
+        color: white;
+        padding: 0.5%;
+        border-radius: 1rem;
+    }
+</style>
+</body>
+</html>

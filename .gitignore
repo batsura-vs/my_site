@@ -1,0 +1,4 @@
+# Project exclude paths
+/.scannerwork/css-bundle/node_modules/
+/.scannerwork/css-bundle/package/node_modules/
+/venv/

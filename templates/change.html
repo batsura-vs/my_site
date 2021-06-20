@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reset</title>
+    <script src="https://hcaptcha.com/1/api.js" async defer></script>
+    <link rel="stylesheet" href="../static/modal.css">
+</head>
+<body>
+<div class="modal">
+    <form action="/saveChanges" method="post">
+        <div class="modal-header">Сброс пароля</div>
+        <div class="modal-body">
+            <div class="server_log">{{ error }}</div>
+            <center class="body">
+                <label class="input">
+                    Новый пароль:
+                    <br>
+                    <input type="password" name="passw">
+                </label>
+                <br>
+                <label class="input">
+                    Повторите новый пароль:
+                    <br>
+                    <input type="password" name="passw2">
+                </label>
+            </center>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="footer-button">Сброс</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
